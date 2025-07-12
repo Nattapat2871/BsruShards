@@ -126,6 +126,8 @@ messages:
   buy-cancelled: "&cPurchase cancelled."
   reload-success: "&aConfiguration reloaded successfully!"
   item-added: "&aItem successfully added to the shop!"
+  set-success: "&aSuccessfully set %player%'s Shards to %amount%."
+  shards-set: "&eYour Shards have been set to &f%amount% &eby an admin."
   
   # %shards% is replaced by the player's shard count (e.g., 1,000).
   you-have-shards: "&eYou have: &f%shards% Shards"

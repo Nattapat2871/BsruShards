@@ -127,6 +127,8 @@ messages:
   buy-cancelled: "&cยกเลิกการซื้อแล้ว"
   reload-success: "&aรีโหลดการตั้งค่าสำเร็จ!"
   item-added: "&aเพิ่มไอเทมลงร้านค้าสำเร็จ!"
+  set-success: "&aตั้งค่า Shards ของ %player% เป็น %amount% สำเร็จ"
+  shards-set: "&eยอด Shards ของคุณถูกตั้งค่าเป็น &f%amount% &eโดยแอดมิน"
   
   # %shards% จะถูกแทนที่ด้วยจำนวน Shards ของผู้เล่น (เช่น 1,000)
   you-have-shards: "&eคุณมี: &f%shards% Shards"
