@@ -1,0 +1,33 @@
+name: bsrushards
+main: com.bsrushards.BrsuShards
+version: 1.4
+api-version: 1.21
+description: A Shards point system with a GUI shop and PlaceholderAPI support.
+author: Nattapat2871
+
+commands:
+  shards:
+    description: Check your Shard balance.
+  bsrushards:
+    description: Plugin information and admin commands.
+    aliases: [bsru, bshard]
+  shardsshop:
+    description: Open the Shard shop.
+    aliases: [sshop]
+
+permissions:
+  bsrushards.user:
+    description: Allows usage of basic commands like /shards and /shardsshop.
+    default: true
+  bsrushards.give:
+    description: Allows usage of the /bsrushards give command.
+    default: op
+  bsrushards.set:
+    description: Allows usage of the /bsrushards set command.
+    default: op
+  bsrushards.shopadmin:
+    description: Allows usage of /bsrushards additem and removeitem.
+    default: op
+  bsrushards.admin:
+    description: Allows usage of the /bsrushards reload command.
+    default: op

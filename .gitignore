@@ -1,0 +1,38 @@
+# Build output directories
+/target/
+/build/
+/out/
+
+# Compiled class files (often handled by ignoring build dirs, but good to have)
+*.class
+
+# IDE project files
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+.vscode/
+
+# Gradle-specific files
+.gradle/
+build/
+
+# Log files and reports
+*.log
+logs/
+hs_err_pid*
+
+# Local Test Server files and folders
+# Prevents uploading your entire test environment
+/server/
+/run/
+eula.txt
+server.properties
+user_jvm_args.txt
+
+# OS-generated files
+.DS_Store
+Thumbs.db
