@@ -1,9 +1,9 @@
 name: bsrushards
 main: com.bsrushards.BrsuShards
-version: 1.4
+version: 1.5 # อัปเดตเวอร์ชัน
 api-version: 1.21
 softdepend: [PlaceholderAPI]
-description: A Shards point system with a GUI shop and PlaceholderAPI support.
+description: A Shards point system with a GUI shop, PlaceholderAPI support, and AFK Pools.
 author: Nattapat2871
 
 commands:
@@ -31,4 +31,7 @@ permissions:
     default: op
   bsrushards.admin:
     description: Allows usage of the /bsrushards reload command.
+    default: op
+  bsrushards.afkpool.admin:
+    description: Allows managing AFK Pools.
     default: op

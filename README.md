@@ -1,3 +1,6 @@
+### `README.md` (English Version - Updated)
+
+```markdown
 # 💎 BrsuShards Plugin
 
 <div align="center">
@@ -20,9 +23,10 @@ A plugin for managing a "Shards" point system, specifically designed for the BSR
 ## ✨ Features
 
 * **🪙 Auto Shards Distribution:** Automatically gives Shards to online players at configured intervals.
+* **🏝️ AFK Reward Zones:** Create special areas where players can stand to continuously earn Shards over time.
 * **🛒 GUI Shop:** Players can use `/shardsshop` to open a shop and exchange Shards for items.
 * **✅ Purchase Confirmation:** Includes a confirmation UI before buying to prevent accidental clicks.
-* **👨‍💻 Admin Commands:** Easily manage players and the shop with the `/bsrushards` command.
+* **👨‍💻 Admin Commands:** Easily manage players, the shop, and AFK zones with the `/bsrushards` command.
 * **📊 PlaceholderAPI Support:** Fetch player Shards data for use in other plugins like scoreboards, tabs, etc.
 * **🔧 Easy Configuration:** Almost all messages, sounds, and UI elements are customizable via `config.yml`.
 
@@ -30,7 +34,7 @@ A plugin for managing a "Shards" point system, specifically designed for the BSR
 
 ## ⚙️ Dependencies
 
-* **Server:** Spigot, Paper, or their forks (1.20+ recommended).
+* **Server:** Spigot, Paper, or their forks (1.16+ recommended).
 * **Optional:** [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) - Required to use placeholders.
 
 ---
@@ -57,6 +61,7 @@ A plugin for managing a "Shards" point system, specifically designed for the BSR
 | `/bsrushards set <player> <amount>` | `bsrushards.set` | Sets a player's Shard balance to a specific amount. |
 | `/bsrushards additem <cost> <slot>` | `bsrushards.shopadmin` | Adds the item you are holding to the shop. |
 | `/bsrushards removeitem <slot>` | `bsrushards.shopadmin` | Removes an item from the specified shop slot. |
+| `/bsrushards afkpool <...>` | `bsrushards.afkpool.admin` | Manage AFK reward zones (use `wand`, `create`, `delete`, `list`). |
 
 
 ---
@@ -75,10 +80,11 @@ If PlaceholderAPI is installed, you can use the following placeholders:
 ## 🔧 Configuration
 
 * `config.yml`: The main configuration file. Used to customize messages, sounds, auto-distribution, and the GUI.
-* `shop.yml`: Shop data file. This is managed automatically via the `/bsrushards additem` command.
+* `shop.yml`: Shop data file. This is managed automatically via in-game commands.
 * `playerdata.yml`: Player data file. This is managed automatically.
+* `afkpool.yml`: Data file for AFK zones, managed automatically via commands.
 
-### config.yml 
+### config.yml
 ```yaml
 # --------------------------------------------------- #
 #             BrsuShards Plugin Settings              #
@@ -86,38 +92,32 @@ If PlaceholderAPI is installed, you can use the following placeholders:
 
 settings:
   # Enable or disable the automatic shard distribution for online players.
-  # Set to 'true' to enable, 'false' to disable.
   play-shards-enabled: true
-  
   # The time in minutes between each automatic shard distribution.
   interval-minutes: 10
-  
   # The number of shards to give to each player during the interval.
   shards-per-interval: 1
 
+# Title and Subtitle settings for when a player enters an AFK Pool.
+afk-pool-entry:
+  enabled: true
+  title: "&b&lEntering AFK Zone"
+  subtitle: "&eYou will now earn rewards for staying here"
+  # Display timings (in ticks, 20 ticks = 1 second)
+  fade-in-ticks: 10
+  stay-ticks: 40
+  fade-out-ticks: 20
+
 # Sound effects for various actions.
-# You can find a list of sound names from the Minecraft Wiki.
 sounds:
-  # Sound when a player opens the shop GUI.
   open-shop: "minecraft:block.note_block.harp"
-  
-  # Sound when a player clicks an item in the shop.
   click-buy: "minecraft:ui.button.click"
-  
-  # Sound for a successful purchase.
   buy-success: "minecraft:block.note_block.pling"
-  
-  # Sound when a purchase is cancelled.
   buy-cancel: "minecraft:entity.villager.no"
-  
-  # Sound for a failed purchase (e.g., not enough shards).
   buy-fail: "minecraft:entity.villager.no"
-  
-  # Sound when a player receives shards.
   shards-receive: "minecraft:entity.experience_orb.pickup"
 
 # All configurable messages for the plugin.
-# You can use Minecraft color codes with the '&' symbol.
 messages:
   only-in-game: "&cThis command can only be used in-game."
   no-permission: "&cYou do not have permission to use this command!"
@@ -128,65 +128,49 @@ messages:
   item-added: "&aItem successfully added to the shop!"
   set-success: "&aSuccessfully set %player%'s Shards to %amount%."
   shards-set: "&eYour Shards have been set to &f%amount% &eby an admin."
-  
-  # %shards% is replaced by the player's shard count (e.g., 1,000).
   you-have-shards: "&eYou have: &f%shards% Shards"
-  
-  # The title of the main shop GUI.
   shop-title: "&6Shard Shop"
-  
-  # The title of the purchase confirmation GUI.
   confirm-title: "&eConfirm Purchase"
-  
-  # Chat message when receiving shards. %amount% is the number of shards received.
   shards-receive: "&aYou have received &e+%amount% &aShards!"
-  
-  # Action bar message when receiving shards.
   shards-receive-bar: "&a+%amount% Shards!"
+  # Messages for AFK Pool system
+  afkpool-wand-given: "&aYou have received the AFK Pool Wand!"
+  afkpool-pos1-set: "&aPosition 1 set to: &e%location%"
+  afkpool-pos2-set: "&aPosition 2 set to: &e%location%"
+  afkpool-created: "&aSuccessfully created AFK Pool: &e%name%"
+  afkpool-deleted: "&cSuccessfully deleted AFK Pool: &e%name%"
+  afkpool-list-header: "&6--- List of AFK Pools ---"
+  afkpool-list-item: "&e- %name% &7(gives &f%shards% &7Shards every &f%time% &7seconds)"
+  afkpool-list-empty: "&cNo AFK Pools have been created yet."
+  afkpool-not-exist: "&cAn AFK Pool with the name &e%name% &cdoes not exist."
+  afkpool-name-exists: "&cAn AFK Pool with the name &e%name% &calready exists."
+  afkpool-no-selection: "&cYou must set both positions with the wand first!"
+  afkpool-invalid-number: "&cTime and amount must be numbers."
+  afkpool-reward-message: "&aYou received &e+%shards% &aShards for being AFK!"
+  afkpool-countdown-bar: "&aReceiving &e+%shards% Shards &afrom &b%pool% &ain &f%time%s"
 
 # Configuration for the graphical user interfaces (GUI).
 shop-ui:
-  # The lore line added to shop items to show their price.
-  # %cost% is replaced with the item's cost.
   price-lore: "&ePrice: &f%cost% Shards"
-  
-  # The item used as a decorative filler in the GUI backgrounds.
   blank:
     type: GRAY_STAINED_GLASS_PANE
-    # The slots to fill with this item.
     slots: [0,1,2,3,4,5,6,7,8,9,10,11,13,15,17,18,19,20,21,22,23,24,25,26]
     display: " "
-    
-  # The item used for slots that are purely decorative and not for sale.
   cannotbuy:
-    # A list of slots to fill with this item in the main shop.
     slots: [1,2,3,4,5,6,7,8,9]
     type: BLACK_STAINED_GLASS_PANE
     display: "&7Not for Sale"
     lore:
       - "&8This item cannot be purchased."
-      
-  # The 'cancel' button in the confirmation GUI.
   cancel:
     type: RED_STAINED_GLASS_PANE
-    # The slot for the cancel button.
     slot: 12
     display: "&cCancel"
-    
-  # The 'confirm' button in the confirmation GUI.
   confirm:
     type: GREEN_STAINED_GLASS_PANE
-    # The slot for the confirm button.
     slot: 16
     display: "&aConfirm"
-    
-  # The slot where the item being purchased is displayed in the confirmation GUI.
-  item-slot: 14 
+  item-slot: 14
   ```
-
----
-
-## ✍️ Author
-
-Developed by: **Nattapat2871**
-[GitHub Project](https://github.com/nattapat2871/bsrushards)
+# ✍️ Author
+Developed by: Nattapat2871

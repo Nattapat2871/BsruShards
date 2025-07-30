@@ -4,38 +4,32 @@
 
 settings:
   # เปิดหรือปิดระบบแจก Shards อัตโนมัติสำหรับผู้เล่นที่ออนไลน์
-  # ตั้งค่าเป็น 'true' เพื่อเปิดใช้งาน, 'false' เพื่อปิดใช้งาน
   play-shards-enabled: true
-  
   # เวลา (หน่วยเป็นนาที) ในการแจก Shards แต่ละครั้ง
   interval-minutes: 10
-  
   # จำนวน Shards ที่จะแจกให้ผู้เล่นแต่ละคนในแต่ละรอบ
   shards-per-interval: 1
 
+# ตั้งค่า Title และ Subtitle ตอนผู้เล่นเข้าเขต AFK Pool
+afk-pool-entry:
+  enabled: true
+  title: "&b&lเข้าสู่เขต AFK"
+  subtitle: "&eคุณจะได้รับรางวัลเมื่อยืนอยู่ในบริเวณนี้"
+  # ระยะเวลาการแสดงผล (หน่วยเป็น tick, 20 ticks = 1 วินาที)
+  fade-in-ticks: 10
+  stay-ticks: 40
+  fade-out-ticks: 20
+
 # เสียงเอฟเฟกต์สำหรับการกระทำต่างๆ
-# คุณสามารถค้นหารายชื่อเสียงได้จาก Minecraft Wiki
 sounds:
-  # เสียงเมื่อผู้เล่นเปิดร้านค้า
   open-shop: "minecraft:block.note_block.harp"
-  
-  # เสียงเมื่อผู้เล่นคลิกไอเทมในร้านค้า
   click-buy: "minecraft:ui.button.click"
-  
-  # เสียงเมื่อซื้อของสำเร็จ
-  buy-success: "minecraft:entity.experience_orb.pickup"
-
-  # เสียงเมื่อยกเลิกการซื้อ
+  buy-success: "minecraft:block.note_block.pling"
   buy-cancel: "minecraft:entity.villager.no"
-
-  # เสียงเมื่อการซื้อล้มเหลว (เช่น แต้มไม่พอ)
   buy-fail: "minecraft:entity.villager.no"
-
-  # เสียงเมื่อได้รับ Shards
-  shards-receive: "minecraft:entity.player.levelup"
+  shards-receive: "minecraft:entity.experience_orb.pickup"
 
 # ข้อความทั้งหมดของปลั๊กอินที่สามารถตั้งค่าได้
-# คุณสามารถใช้โค้ดสีของ Minecraft ด้วยเครื่องหมาย '&'
 messages:
   only-in-game: "&cคำสั่งนี้ใช้ได้เฉพาะในเกมเท่านั้น"
   no-permission: "&cคุณไม่มีสิทธิ์ใช้งานคำสั่งนี้!"
@@ -46,21 +40,26 @@ messages:
   item-added: "&aเพิ่มไอเทมลงร้านค้าสำเร็จ!"
   set-success: "&aตั้งค่า Shards ของ %player% เป็น %amount% สำเร็จ"
   shards-set: "&eยอด Shards ของคุณถูกตั้งค่าเป็น &f%amount% &eโดยแอดมิน"
-
-  # %shards% จะถูกแทนที่ด้วยจำนวน Shards ของผู้เล่น (เช่น 1,000)
   you-have-shards: "&eคุณมี: &f%shards% Shards"
-
-  # ชื่อของหน้าต่างร้านค้าหลัก
-  shop-title: "&5ร้านค้า Shard"
-
-  # ชื่อของหน้าต่างยืนยันการซื้อ
-  confirm-title: "&6ยืนยันการซื้อ"
-
-  # ข้อความในแชทเมื่อได้รับ Shards. %amount% คือจำนวนที่ได้รับ
+  shop-title: "&6ร้านค้า Shard"
+  confirm-title: "&eยืนยันการซื้อ"
   shards-receive: "&aคุณได้รับ &e+%amount% &aShards!"
-
-  # ข้อความบน Action bar เมื่อได้รับ Shards
   shards-receive-bar: "&a+%amount% Shards!"
+  # ข้อความสำหรับ AFK Pool
+  afkpool-wand-given: "&aคุณได้รับ AFK Pool Wand!"
+  afkpool-pos1-set: "&aกำหนดจุดที่ 1 แล้วที่: &e%location%"
+  afkpool-pos2-set: "&aกำหนดจุดที่ 2 แล้วที่: &e%location%"
+  afkpool-created: "&aสร้าง AFK Pool ชื่อ &e%name% &aสำเร็จ!"
+  afkpool-deleted: "&cลบ AFK Pool ชื่อ &e%name% &cสำเร็จแล้ว"
+  afkpool-list-header: "&6--- รายชื่อ AFK Pools ---"
+  afkpool-list-item: "&e- %name% &7(ให้ &f%shards% &7Shards ทุก &f%time% &7วินาที)"
+  afkpool-list-empty: "&cยังไม่มี AFK Pool ใดๆถูกสร้างขึ้น"
+  afkpool-not-exist: "&cไม่พบ AFK Pool ที่ชื่อ &e%name%"
+  afkpool-name-exists: "&cมี AFK Pool ที่ชื่อ &e%name% &cอยู่แล้ว"
+  afkpool-no-selection: "&cคุณต้องกำหนดพื้นที่ด้วย Wand ก่อน! (จุดที่ 1 และ 2)"
+  afkpool-invalid-number: "&cค่าเวลาและจำนวนต้องเป็นตัวเลขเท่านั้น!"
+  afkpool-reward-message: "&aคุณได้รับ &e+%shards% &aShards จากการ AFK!"
+  afkpool-countdown-bar: "&aคุณจะได้รับ &e+%shards% Shards &aจากโซน &b%pool% &aในอีก &f%time% &aวินาที"
 
 # การตั้งค่าสำหรับหน้าต่างกราฟิก (GUI)
 shop-ui:
@@ -72,13 +71,13 @@ shop-ui:
   blank:
     type: GRAY_STAINED_GLASS_PANE
     # ช่องที่จะเติมด้วยไอเทมนี้
-    slots: [0,1,2,3,4,5,6,7,8,9,10,12,14,16,17,18,19,20,21,22,23,24,25,26]
+    slots: []
     display: " "
 
   # ไอเทมที่ใช้สำหรับช่องที่ตกแต่งเท่านั้นและไม่สามารถซื้อได้
   cannotbuy:
     # รายชื่อช่องที่จะเติมด้วยไอเทมนี้ในร้านค้าหลัก
-    slots: [0,1,2,3,4,5,6,7,8]
+    slots: []
     type: BLACK_STAINED_GLASS_PANE
     display: "&7ไม่มีไว้สำหรับขาย"
     lore:

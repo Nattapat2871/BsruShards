@@ -1,0 +1,7 @@
+#
+# ไฟล์สำหรับเก็บข้อมูลพื้นที่ AFK Pool
+# อย่าแก้ไขไฟล์นี้โดยตรงถ้าไม่จำเป็น! ให้ใช้คำสั่งในเกมแทน
+# /bsrushards afkpool create <name> <time> <amount>
+# /bsrushards afkpool delete <name>
+#
+pools: {}
