@@ -1,6 +1,4 @@
-### `README.md` (English Version - Updated)
 
-```markdown
 # 💎 BrsuShards Plugin
 
 <div align="center">
