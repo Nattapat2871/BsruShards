@@ -2,18 +2,19 @@ name: bsrushards
 main: com.bsrushards.BrsuShards
 version: 1.4
 api-version: 1.21
+softdepend: [PlaceholderAPI]
 description: A Shards point system with a GUI shop and PlaceholderAPI support.
 author: Nattapat2871
 
 commands:
   shards:
     description: Check your Shard balance.
+    permission: bsrushards.user
   bsrushards:
     description: Plugin information and admin commands.
-    aliases: [bsru, bshard]
   shardsshop:
     description: Open the Shard shop.
-    aliases: [sshop]
+    permission: bsrushards.user
 
 permissions:
   bsrushards.user:

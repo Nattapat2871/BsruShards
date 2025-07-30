@@ -60,7 +60,7 @@ public class BrsuShards extends JavaPlugin implements TabExecutor, Listener {
 
         playerFile = new File(getDataFolder(), "playerdata.yml");
         if (!playerFile.exists()) {
-            try { playerFile.createNewFile(); } catch (IOException ignored) {}
+            try { playerFile.createNewFile(); } catch (IOException e) { e.printStackTrace(); }
         }
         playerConfig = YamlConfiguration.loadConfiguration(playerFile);
         loadPlayerData();
@@ -123,7 +123,6 @@ public class BrsuShards extends JavaPlugin implements TabExecutor, Listener {
                     sender.sendMessage(getMsg("no-permission"));
                     return true;
                 }
-                reloadConfig();
                 loadConfigs();
                 startShardAutoTask();
                 sender.sendMessage(getMsg("reload-success"));
@@ -274,7 +273,7 @@ public class BrsuShards extends JavaPlugin implements TabExecutor, Listener {
         if (args.length == 1)
             return filter(base, args[0]);
         if (args.length == 2 && (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("set")))
-            return null; // Default player name completion
+            return null;
         if (args.length == 2 && args[0].equalsIgnoreCase("additem"))
             return Collections.singletonList("<cost>");
         if (args.length == 3 && args[0].equalsIgnoreCase("additem"))
@@ -311,7 +310,7 @@ public class BrsuShards extends JavaPlugin implements TabExecutor, Listener {
             if (shopItem.slot >= 0 && shopItem.slot < inv.getSize())
                 inv.setItem(shopItem.slot, formatShopItem(shopItem));
         }
-        player.openInventory(inv);
+        Bukkit.getScheduler().runTask(this, () -> player.openInventory(inv));
         playSound(player, "open-shop");
     }
 
@@ -349,15 +348,13 @@ public class BrsuShards extends JavaPlugin implements TabExecutor, Listener {
             if (slot == cancelSlot) {
                 playSound(p, "buy-cancel");
                 p.sendMessage(getMsg("buy-cancelled"));
-                openShop(p); // กลับไปหน้าร้านค้า, onInventoryClose จะทำงานและลบ cache
+                openShop(p);
                 return;
             }
             if (slot == confirmSlot && confirmCache.containsKey(p.getUniqueId())) {
-                // เปลี่ยนจาก .remove() เป็น .get() เพื่อให้ซื้อซ้ำได้
                 int shopSlot = confirmCache.get(p.getUniqueId());
                 ShopItem item = shopItems.get(shopSlot);
                 if (item == null) {
-                    // This case should ideally not happen if cache is managed properly
                     playSound(p, "buy-fail");
                     p.closeInventory();
                     return;
@@ -374,6 +371,10 @@ public class BrsuShards extends JavaPlugin implements TabExecutor, Listener {
                 p.sendMessage(getMsg("buy-success")
                         .replace("%item%", showName)
                         .replace("%cost%", formatNumberWithComma(item.cost)));
+
+                // แก้บั๊ก: ลบ cache และปิด inventory หลังซื้อสำเร็จ
+                confirmCache.remove(p.getUniqueId());
+                p.closeInventory();
             }
             return;
         }
@@ -389,13 +390,11 @@ public class BrsuShards extends JavaPlugin implements TabExecutor, Listener {
         }
     }
 
-    // เพิ่ม: Event Handler สำหรับตอนปิด Inventory
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
         if (!(e.getPlayer() instanceof Player)) return;
         Player p = (Player) e.getPlayer();
         String title = e.getView().getTitle();
-        // ถ้าเป็นหน้าต่างยืนยันการซื้อ ให้ลบ cache ของผู้เล่นคนนั้นออก
         if (title.equalsIgnoreCase(color(config.getString("messages.confirm-title", "&eConfirm Purchase")))) {
             confirmCache.remove(p.getUniqueId());
         }
@@ -514,7 +513,10 @@ public class BrsuShards extends JavaPlugin implements TabExecutor, Listener {
                     UUID uuid = UUID.fromString(uuidStr);
                     int value = playerConfig.getInt("players." + uuidStr + ".shards", 0);
                     shards.put(uuid, value);
-                } catch (Exception ignored) {}
+                } catch (Exception e) {
+                    getLogger().warning("Failed to load player data for: " + uuidStr);
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -523,7 +525,7 @@ public class BrsuShards extends JavaPlugin implements TabExecutor, Listener {
         for (Map.Entry<UUID, Integer> entry : shards.entrySet()) {
             playerConfig.set("players." + entry.getKey().toString() + ".shards", entry.getValue());
         }
-        try { playerConfig.save(playerFile); } catch (IOException ignored) {}
+        try { playerConfig.save(playerFile); } catch (IOException e) { e.printStackTrace(); }
     }
 
     public void loadShopItems() {
@@ -536,7 +538,10 @@ public class BrsuShards extends JavaPlugin implements TabExecutor, Listener {
                     ItemStack item = shopConfig.getItemStack("shop." + key + ".item");
                     if (item != null)
                         shopItems.put(slot, new ShopItem(slot, item, cost));
-                } catch (Exception ignored) {}
+                } catch (Exception e) {
+                    getLogger().warning("Failed to load shop item for key: " + key);
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -547,7 +552,7 @@ public class BrsuShards extends JavaPlugin implements TabExecutor, Listener {
             shopConfig.set("shop." + item.slot + ".cost", item.cost);
             shopConfig.set("shop." + item.slot + ".item", item.item);
         }
-        try { shopConfig.save(shopFile); } catch (IOException ignored) {}
+        try { shopConfig.save(shopFile); } catch (IOException e) { e.printStackTrace(); }
     }
 
     private static class ShopItem {
